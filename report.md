@@ -65,10 +65,6 @@ output = {
 }
 ```
 
-**Screenshot**: Configuration verification showing successful Snort 3 initialization
-
-![Snort Version Check](../screenshots/month2/snort-version-check.png)
-
 ---
 
 ### 2. Network Monitoring
@@ -93,9 +89,6 @@ output = {
 [Priority: 3] {TCP} 198.51.100.22:45678 -> 192.168.1.10:443
 ```
 
-**Screenshot**: Real-time traffic monitoring showing alert generation
-
-![Traffic Monitoring](../screenshots/month2/traffic-monitoring.png)
 
 ---
 
@@ -113,9 +106,7 @@ output = {
 - **Alerts Generated**: 6 (1 HTTP + 5 ICMP)
 - **Rule Triggered**: SID 1009 - Suspicious External Connection
 
-**Screenshot**: Alert showing detection of restricted IP access
 
-![Restricted Access Alert](../screenshots/month2/restricted-access.png)
 
 ---
 
@@ -131,9 +122,6 @@ output = {
 - **Alerts Generated**: 2
 - **Rule Triggered**: SID 3000002 - SSH Connection Attempt
 
-**Screenshot**: SSH connection detection
-
-![SSH Detection](../screenshots/month2/ssh-detection.png)
 
 ---
 
@@ -149,9 +137,7 @@ output = {
 - **Alerts Generated**: 2
 - **Rule Triggered**: SID 3000003 - FTP Connection Attempt
 
-**Screenshot**: FTP connection alerts
 
-![FTP Detection](../screenshots/month2/ftp-detection.png)
 
 ---
 
@@ -172,9 +158,7 @@ output = {
   - SID 217 - MALWARE-BACKDOOR sm4ck attempt
   - SID 209 - MALWARE-BACKDOOR w00w00 attempt
 
-**Screenshot**: Critical backdoor detection alerts
 
-![Backdoor Detection](../screenshots/month2/backdoor-detection.png)
 
 ---
 
@@ -191,9 +175,6 @@ output = {
 - **Alerts Generated**: 5
 - **Rule Triggered**: SID 221 - ICMP TFN Probe
 
-**Screenshot**: DDoS botnet communication detection
-
-![TFN Detection](../screenshots/month2/tfn-detection.png)
 
 ---
 
@@ -209,9 +190,7 @@ output = {
 - **Alerts Generated**: 14
 - **Rule Triggered**: SID 1411 - SNMP public request
 
-**Screenshot**: SNMP enumeration attempt detection
 
-![SNMP Detection](../screenshots/month2/snmp-detection.png)
 
 ---
 
@@ -227,9 +206,7 @@ output = {
 - **Alerts Generated**: 2
 - **Rule Triggered**: SID 1206 - XSS prompt attempt
 
-**Screenshot**: Web application XSS detection
 
-![XSS Detection](../screenshots/month2/xss-detection.png)
 
 ---
 
@@ -246,9 +223,6 @@ output = {
 - **Alerts Generated**: 2
 - **Rule Triggered**: SID 1789 - IRC USERHOST command
 
-**Screenshot**: IRC botnet C2 detection
-
-![IRC Detection](../screenshots/month2/irc-detection.png)
 
 ---
 
@@ -277,9 +251,7 @@ output = {
   - SID 1002003 - TCP XMAS Scan Detected
   - SID 1003001 - UDP Port Scan Detected
 
-**Screenshot**: Comprehensive port scan detection
 
-![Port Scan Detection](../screenshots/month2/port-scan-detection.png)
 
 ---
 
@@ -294,9 +266,6 @@ output = {
 - **Alerts Generated**: 1 (threshold-based)
 - **Rule Triggered**: SID 1002004 - SSH Brute Force Attempt Detected
 
-**Screenshot**: SSH brute force alert
-
-![SSH Brute Force](../screenshots/month2/ssh-bruteforce.png)
 
 ---
 
@@ -314,9 +283,7 @@ alert ip any any -> 44.228.249.3 any (msg:"Suspicious External Connection"; sid:
 - **Results**: 100% detection rate with zero false positives
 - **Use Case**: Content filtering, blocking command & control servers
 
-**Screenshot**: Rule triggering on restricted access
 
-![Rule 1.1 Test](../screenshots/month2/rule-1-1-test.png)
 
 ---
 
@@ -342,9 +309,6 @@ alert tcp any any -> any 23 (msg:"MALWARE-BACKDOOR w00w00 attempt"; content:"w00
 - **Results**: 100% detection accuracy
 - **Severity**: CRITICAL - Advanced persistent threat indicator
 
-**Screenshot**: Backdoor detection in action
-
-![Backdoor Rules](../screenshots/month2/backdoor-rules.png)
 
 ---
 
@@ -360,9 +324,7 @@ alert icmp any any -> any any (msg:"ICMP TFN Probe"; icmp_id:678; content:"1234"
 - **Results**: Successfully identified all TFN probe attempts
 - **Severity**: CRITICAL - Indicates compromised host in DDoS botnet
 
-**Screenshot**: TFN botnet detection
 
-![TFN Detection Rule](../screenshots/month2/tfn-rule.png)
 
 ---
 
@@ -388,9 +350,6 @@ alert tcp any any -> $HOME_NET 53 (msg:"DNS Zone Transfer Attempt"; flow:to_serv
 - **Results**: Accurate detection of AXFR query type
 - **Severity**: HIGH - Exposes complete DNS database
 
-**Screenshot**: Reconnaissance detection alerts
-
-![Reconnaissance Rules](../screenshots/month2/recon-rules.png)
 
 ---
 
@@ -436,9 +395,6 @@ alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Suspicious User-Agent Detected"
 - **Results**: 100% detection of tested scanners
 - **Severity**: MEDIUM - Indicates reconnaissance activity
 
-**Screenshot**: Web application attack detection
-
-![Web Attack Rules](../screenshots/month2/web-attack-rules.png)
 
 ---
 
@@ -471,9 +427,7 @@ alert udp any any -> $HOME_NET any (msg:"UDP Port Scan Detected"; threshold:type
 - **Results**: All scan types detected with minimal false positives
 - **Performance**: No measurable CPU impact at threshold levels
 
-**Screenshot**: Port scan detection dashboard
 
-![Port Scan Rules](../screenshots/month2/port-scan-rules.png)
 
 ---
 
@@ -499,9 +453,6 @@ alert tcp any any -> $HOME_NET 21 (msg:"FTP Brute Force Attempt"; flow:to_server
 - **Results**: Accurate detection with no false positives
 - **Recommendation**: Consider blocking FTP entirely in favor of SFTP
 
-**Screenshot**: Authentication attack detection
-
-![Auth Attack Rules](../screenshots/month2/auth-rules.png)
 
 ---
 
@@ -555,9 +506,6 @@ Type:8  Code:0  ID:678   Seq:1234  ECHO
 {TCP} 198.51.100.45:45678 -> 192.168.1.50:23
 ```
 
-**Screenshot**: Alert log showing various detection events
-
-![Alert Logs](../screenshots/month2/alert-logs.png)
 
 ---
 
@@ -1221,36 +1169,6 @@ echo "PCAP file created: $OUTPUT"
 ```
 
 ---
-
-### D. Additional Screenshots
-
-1. **Installation Screenshots**
-   - snort-version-check.png - Snort 3 version verification
-   - config-test-pass.png - Configuration test success
-   - interface-config.png - Network interface setup
-
-2. **Rule Testing Screenshots**
-   - restricted-access.png - Rule 1.1 detection
-   - ssh-detection.png - SSH connection alert
-   - ftp-detection.png - FTP connection alert
-   - backdoor-detection.png - Malware signature alerts
-   - tfn-detection.png - DDoS botnet probe
-   - snmp-detection.png - SNMP enumeration
-   - xss-detection.png - XSS attack detection
-   - irc-detection.png - IRC C2 communication
-   - port-scan-detection.png - Multiple scan techniques
-
-3. **Performance Screenshots**
-   - cpu-usage-graph.png - CPU utilization over time
-   - memory-usage.png - RAM consumption
-   - packet-statistics.png - Packet processing stats
-   - alert-volume-graph.png - Daily alert trends
-
-4. **Dashboard Screenshots**
-   - elk-dashboard.png - Kibana overview
-   - alert-severity-pie.png - Alert distribution
-   - top-attackers.png - Source IP ranking
-   - protocol-distribution.png - Traffic breakdown
 
 ---
 
