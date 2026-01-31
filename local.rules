@@ -1,0 +1,270 @@
+# Custom Snort Rules
+
+This file contains custom detection rules developed for the Snort NIDS project.
+
+## Rule Naming Convention
+- SID Range: 1000001 - 1999999 (local rules)
+- Format: `sid:10XXYYZ` where:
+  - XX = Category (01=ICMP, 02=TCP, 03=UDP, etc.)
+  - YY = Subcategory
+  - Z = Version/Revision
+
+## Table of Contents
+1. [ICMP Detection Rules](#icmp-detection-rules)
+2. [Port Scan Detection](#port-scan-detection)
+3. [SSH Brute Force Detection](#ssh-brute-force-detection)
+4. [HTTP Attack Detection](#http-attack-detection)
+5. [Custom Application Rules](#custom-application-rules)
+
+---
+
+## ICMP Detection Rules
+
+### Basic ICMP Ping Detection
+```
+# Detects any ICMP echo request (ping)
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Low
+alert icmp any any -> $HOME_NET any (msg:"ICMP Ping Detected"; \
+itype:8; sid:1001001; rev:1;)
+```
+
+### ICMP Flood Detection
+```
+# Detects potential ICMP flood attacks
+# Triggers when more than 10 ICMP packets in 5 seconds from same source
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert icmp any any -> $HOME_NET any (msg:"Possible ICMP Flood Attack"; \
+itype:8; threshold:type both, track by_src, count 10, seconds 5; \
+sid:1001002; rev:1;)
+```
+
+### Large ICMP Packet
+```
+# Detects unusually large ICMP packets (potential ping of death)
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert icmp any any -> $HOME_NET any (msg:"Large ICMP Packet Detected"; \
+dsize:>1000; itype:8; sid:1001003; rev:1;)
+```
+
+---
+
+## Port Scan Detection
+
+### TCP SYN Scan Detection
+```
+# Detects TCP SYN scans (common reconnaissance technique)
+# Triggers on multiple SYN packets to different ports
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert tcp any any -> $HOME_NET any (msg:"TCP SYN Scan Detected"; \
+flags:S; threshold:type both, track by_src, count 20, seconds 10; \
+sid:1002001; rev:1;)
+```
+
+### NULL Scan Detection
+```
+# Detects TCP NULL scans (stealth scan technique)
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert tcp any any -> $HOME_NET any (msg:"TCP NULL Scan Detected"; \
+flags:0; threshold:type both, track by_src, count 10, seconds 10; \
+sid:1002002; rev:1;)
+```
+
+### XMAS Scan Detection
+```
+# Detects TCP XMAS scans (FIN, PSH, URG flags set)
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert tcp any any -> $HOME_NET any (msg:"TCP XMAS Scan Detected"; \
+flags:FPU; threshold:type both, track by_src, count 10, seconds 10; \
+sid:1002003; rev:1;)
+```
+
+### UDP Port Scan Detection
+```
+# Detects UDP port scans
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert udp any any -> $HOME_NET any (msg:"UDP Port Scan Detected"; \
+threshold:type both, track by_src, count 20, seconds 10; \
+sid:1003001; rev:1;)
+```
+
+---
+
+## SSH Brute Force Detection
+
+### SSH Connection Attempts
+```
+# Detects multiple SSH connection attempts (brute force)
+# Triggers on 5+ connections in 60 seconds
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert tcp any any -> $HOME_NET 22 (msg:"SSH Brute Force Attempt Detected"; \
+flags:S; threshold:type both, track by_src, count 5, seconds 60; \
+sid:1002004; rev:1;)
+```
+
+### SSH Failed Login Pattern
+```
+# Detects SSH authentication failures
+# Works with SSH protocol analysis
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert tcp any any -> $HOME_NET 22 (msg:"Multiple SSH Failed Logins"; \
+content:"Failed password"; threshold:type both, track by_src, count 3, seconds 60; \
+sid:1002005; rev:1;)
+```
+
+---
+
+## HTTP Attack Detection
+
+### SQL Injection Attempt
+```
+# Detects common SQL injection patterns in HTTP traffic
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Critical
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Possible SQL Injection Attempt"; \
+flow:to_server,established; content:"union"; nocase; content:"select"; nocase; \
+distance:0; sid:1004001; rev:1;)
+```
+
+### Directory Traversal
+```
+# Detects directory traversal attempts
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Directory Traversal Attempt"; \
+flow:to_server,established; content:"../"; sid:1004002; rev:1;)
+```
+
+### Suspicious User-Agent
+```
+# Detects suspicious or scanner user-agents
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Suspicious User-Agent Detected"; \
+flow:to_server,established; content:"User-Agent|3a| "; \
+pcre:"/User-Agent\x3a\s(nikto|nmap|sqlmap|dirbuster)/i"; \
+sid:1004003; rev:1;)
+```
+
+---
+
+## Custom Application Rules
+
+### FTP Brute Force
+```
+# Detects FTP brute force attempts
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Brute Force Attempt"; \
+flow:to_server,established; content:"USER"; nocase; \
+threshold:type both, track by_src, count 5, seconds 60; \
+sid:1005001; rev:1;)
+```
+
+### DNS Zone Transfer Attempt
+```
+# Detects unauthorized DNS zone transfer attempts
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: High
+alert tcp any any -> $HOME_NET 53 (msg:"DNS Zone Transfer Attempt"; \
+flow:to_server,established; content:"|00 00 fc|"; offset:14; \
+sid:1005002; rev:1;)
+```
+
+### Telnet Connection
+```
+# Detects Telnet connections (insecure protocol)
+# Author: Student Name
+# Date: 2026-01-31
+# Severity: Medium
+alert tcp any any -> $HOME_NET 23 (msg:"Telnet Connection Detected"; \
+flow:to_server,established; sid:1005003; rev:1;)
+```
+
+---
+
+## Testing These Rules
+
+### Test ICMP Rules
+```bash
+# From another machine, run:
+ping -c 100 <target_ip>
+```
+
+### Test Port Scan Detection
+```bash
+# Using nmap:
+nmap -sS <target_ip>
+nmap -sN <target_ip>
+nmap -sX <target_ip>
+```
+
+### Test SSH Brute Force
+```bash
+# Using hydra (in a test environment only):
+hydra -l user -P passwords.txt ssh://<target_ip>
+```
+
+---
+
+## Rule Optimization Tips
+
+1. **Use thresholds** to reduce false positives
+2. **Track by source** for distributed attacks
+3. **Test rules** before deploying in production
+4. **Document everything** - why the rule exists, what it detects
+5. **Review logs regularly** to fine-tune sensitivity
+6. **Use content matching** sparingly (impacts performance)
+7. **Combine rules** where logical for better context
+
+---
+
+## Disabling Rules
+
+To temporarily disable a rule without deleting it:
+
+```
+# Comment out the rule by adding # at the beginning
+# alert icmp any any -> $HOME_NET any (msg:"ICMP Ping Detected"; sid:1001001; rev:1;)
+```
+
+---
+
+## Contributing New Rules
+
+When adding new rules to this file:
+
+1. Use the next available SID in the appropriate range
+2. Include author name and date
+3. Add clear description/comments
+4. Test the rule thoroughly
+5. Document expected triggers
+6. Include severity level
+
+---
+
+**Last Updated**: 2026-01-31  
+**Maintainer**: Project Contributors  
+**Total Rules**: 14

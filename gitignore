@@ -1,0 +1,92 @@
+# Snort NIDS Project .gitignore
+
+# Snort log files
+*.log
+*.log.*
+/var/log/snort/
+snort.log.*
+alert
+*.pcap
+*.cap
+
+# Snort alert files
+alert.*
+alerts/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Virtual environments
+virtualenv/
+.virtualenvs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Sensitive information
+secrets/
+*.key
+*.pem
+credentials.txt
+passwords.txt
+api_keys.txt
+
+# Local configuration
+local.conf
+*.local
+
+# Backup files
+*.bak
+*.backup
+backup/
+
+# Large files
+*.iso
+*.tar.gz
+*.zip
+*.rar
+
+# Node modules (if using any JavaScript tools)
+node_modules/
+
+# Keep directory structure but ignore contents
+logs/*
+!logs/.gitkeep
+output/*
+!output/.gitkeep
