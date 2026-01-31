@@ -1,7 +1,4 @@
 # Network Intrusion Detection System (NIDS) Using Snort
-
-![Snort Logo](https://via.placeholder.com/150x50/FF0000/FFFFFF?text=SNORT+IDS)
-
 A comprehensive hands-on cybersecurity training project focused on building and configuring a Network Intrusion Detection System using Snort. This 3-month progressive training program guides learners from foundational concepts to advanced alert management and reporting.
 
 ## 📋 Table of Contents
@@ -282,8 +279,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
-
+- **Hitendra Parmar** - [parmarhitendra](https://github.com/parmarhitendra/)
+- **Rudra Patel** - [Rudyy1824](https://github.com/rudyy1824/)
 ## 🙏 Acknowledgments
 
 - Snort development team for creating this powerful IDS
@@ -294,6 +291,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⚠️ Disclaimer**: This project is for educational purposes only. Always ensure you have proper authorization before conducting security testing on any network. Unauthorized network scanning or attack simulation may be illegal in your jurisdiction.
 
-**📧 Contact**: For questions or collaboration, please open an issue or contact [your.email@example.com]
+**📧 Contact**: For questions or collaboration, please open an issue or contact [hitendraarjunsinhparmar@gmail.com] & [rudrapatel1824@gmail.com]
 
 **⭐ If you found this project helpful, please consider giving it a star!**
