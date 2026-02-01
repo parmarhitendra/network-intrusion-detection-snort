@@ -235,3 +235,242 @@ alert tcp any any -> $HOME_NET 21 (msg:"FTP Brute Force Attempt"; flow:to_server
 # ============================================================================
 # END OF LOCAL RULES FILE
 # ============================================================================
+
+# ============================================================================
+# SNORT LOCAL RULES FILE
+# ============================================================================
+# Project: Network Intrusion Detection System (NIDS) Using Snort
+# Team: Rudra Patel, Hitendra Parmar
+# Last Updated: January 31, 2026
+# Total Rules: 23
+# ============================================================================
+
+# USAGE INSTRUCTIONS:
+# 1. Save this file to /etc/snort/rules/local.rules
+# 2. Ensure snort.conf includes: include $RULE_PATH/local.rules
+# 3. Test configuration: sudo snort -T -c /etc/snort/snort.conf
+# 4. Run Snort: sudo snort -c /etc/snort/snort.lua -i eth0 -A alert_fast
+
+# ============================================================================
+# SECTION 1: NETWORK ACCESS CONTROL
+# ============================================================================
+
+# Rule 1.1: Restricted Website Access Alert
+# Detects connections to restricted IP address
+# Severity: Medium | SID: 1009
+alert ip any any -> 44.228.249.3 any (msg:"Suspicious External Connection"; sid:1009; rev:1;)
+
+
+# ============================================================================
+# SECTION 2: SERVICE CONNECTION MONITORING
+# ============================================================================
+
+# Rule 2.1: SSH Connection Attempt
+# Detects SSH connection initiation
+# Severity: Low-Medium | SID: 3000002
+alert tcp any any -> any 22 (msg:"SSH Connection Attempt"; flags:S; sid:3000002; rev:1;)
+
+# Rule 2.2: FTP Connection Attempt
+# Detects FTP connection initiation (insecure protocol)
+# Severity: Medium | SID: 3000003
+alert tcp any any -> any 21 (msg:"FTP Connection Attempt"; flags:S; sid:3000003; rev:1;)
+
+# Rule 2.3: Telnet Connection Detection
+# Detects Telnet usage (insecure protocol)
+# Severity: Medium | SID: 1005003
+alert tcp any any -> $HOME_NET 23 (msg:"Telnet Connection Detected"; flow:to_server,established; sid:1005003; rev:1;)
+
+
+# ============================================================================
+# SECTION 3: MALWARE & BACKDOOR DETECTION
+# ============================================================================
+
+# Rule 3.1: SM4CK Backdoor Detection
+# Detects sm4ck Telnet-based backdoor via "hax0r" signature
+# Severity: Critical | SID: 217
+alert tcp any any -> any 23 (msg:"MALWARE-BACKDOOR sm4ck attempt"; content:"hax0r"; sid:217; rev:2;)
+
+# Rule 3.2: W00W00 Backdoor Detection
+# Detects w00w00 hacking group backdoor
+# Severity: Critical | SID: 209
+alert tcp any any -> any 23 (msg:"MALWARE-BACKDOOR w00w00 attempt"; content:"w00w00"; sid:209; rev:2;)
+
+
+# ============================================================================
+# SECTION 4: DDoS & BOTNET DETECTION
+# ============================================================================
+
+# Rule 4.1: ICMP TFN Probe (Tribe Flood Network)
+# Detects TFN DDoS botnet communication
+# ICMP ID: 678, Payload: "1234"
+# Severity: Critical | SID: 221
+alert icmp any any -> any any (msg:"ICMP TFN Probe"; icmp_id:678; content:"1234"; sid:221; rev:2;)
+
+
+# ============================================================================
+# SECTION 5: NETWORK RECONNAISSANCE
+# ============================================================================
+
+# Rule 5.1: SNMP Public Community String
+# Detects SNMP enumeration using default "public" string
+# Severity: Medium-High | SID: 1411
+alert udp any any -> any 161 (msg:"SNMP public request"; content:"public"; sid:1411; rev:2;)
+
+# Rule 5.2: DNS Zone Transfer Attempt
+# Detects unauthorized DNS zone transfer attempts
+# Severity: High | SID: 1005002
+alert tcp any any -> $HOME_NET 53 (msg:"DNS Zone Transfer Attempt"; flow:to_server,established; content:"|00 00 fc|"; offset:14; sid:1005002; rev:1;)
+
+
+# ============================================================================
+# SECTION 6: WEB APPLICATION ATTACKS
+# ============================================================================
+
+# Rule 6.1: Cross-Site Scripting (XSS) Detection
+# Detects XSS payload with prompt() function
+# Severity: High | SID: 1206
+alert tcp any any -> any 80 (msg:"XSS prompt attempt"; pcre:"/<script>prompt\\(/i"; sid:1206; rev:2)
+
+# Rule 6.2: SQL Injection Detection
+# Detects UNION-based SQL injection attempts
+# Severity: Critical | SID: 1004001
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Possible SQL Injection Attempt"; flow:to_server,established; content:"union"; nocase; content:"select"; nocase; distance:0; sid:1004001; rev:1;)
+
+# Rule 6.3: Directory Traversal Detection
+# Detects path traversal attempts
+# Severity: High | SID: 1004002
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Directory Traversal Attempt"; flow:to_server,established; content:"../"; sid:1004002; rev:1;)
+
+# Rule 6.4: Suspicious User-Agent Detection
+# Detects automated security scanners (Nikto, Nmap, SQLMap, DirBuster)
+# Severity: Medium | SID: 1004003
+alert tcp any any -> $HOME_NET $HTTP_PORTS (msg:"Suspicious User-Agent Detected"; flow:to_server,established; content:"User-Agent|3a| "; pcre:"/User-Agent\x3a\s(nikto|nmap|sqlmap|dirbuster)/i"; sid:1004003; rev:1;)
+
+
+# ============================================================================
+# SECTION 7: IRC COMMAND & CONTROL
+# ============================================================================
+
+# Rule 7.1: IRC USERHOST Command
+# Detects IRC USERHOST command (potential botnet C2)
+# Severity: Medium-High | SID: 1789
+alert tcp any any -> any 6667 (msg:"IRC USERHOST command"; content:"USERHOST "; sid:1789; rev:2;)
+
+
+# ============================================================================
+# SECTION 8: ICMP DETECTION
+# ============================================================================
+
+# Rule 8.1: Basic ICMP Ping Detection
+# Detects ICMP echo requests
+# Severity: Low | SID: 1001001
+alert icmp any any -> $HOME_NET any (msg:"ICMP Ping Detected"; itype:8; sid:1001001; rev:1;)
+
+# Rule 8.2: ICMP Flood Detection
+# Detects potential ICMP flood (10+ packets in 5 seconds)
+# Severity: Medium | SID: 1001002
+alert icmp any any -> $HOME_NET any (msg:"Possible ICMP Flood Attack"; itype:8; threshold:type both, track by_src, count 10, seconds 5; sid:1001002; rev:1;)
+
+# Rule 8.3: Large ICMP Packet Detection
+# Detects oversized ICMP packets (Ping of Death)
+# Severity: High | SID: 1001003
+alert icmp any any -> $HOME_NET any (msg:"Large ICMP Packet Detected"; dsize:>1000; itype:8; sid:1001003; rev:1;)
+
+
+# ============================================================================
+# SECTION 9: PORT SCAN DETECTION
+# ============================================================================
+
+# Rule 9.1: TCP SYN Scan Detection
+# Detects TCP SYN scans (20+ SYN packets in 10 seconds)
+# Severity: Medium | SID: 1002001
+alert tcp any any -> $HOME_NET any (msg:"TCP SYN Scan Detected"; flags:S; threshold:type both, track by_src, count 20, seconds 10; sid:1002001; rev:1;)
+
+# Rule 9.2: TCP NULL Scan Detection
+# Detects TCP NULL scans (stealth technique)
+# Severity: Medium | SID: 1002002
+alert tcp any any -> $HOME_NET any (msg:"TCP NULL Scan Detected"; flags:0; threshold:type both, track by_src, count 10, seconds 10; sid:1002002; rev:1;)
+
+# Rule 9.3: TCP XMAS Scan Detection
+# Detects TCP XMAS scans (FIN, PSH, URG flags)
+# Severity: Medium | SID: 1002003
+alert tcp any any -> $HOME_NET any (msg:"TCP XMAS Scan Detected"; flags:FPU; threshold:type both, track by_src, count 10, seconds 10; sid:1002003; rev:1;)
+
+# Rule 9.4: UDP Port Scan Detection
+# Detects UDP port scans (20+ packets in 10 seconds)
+# Severity: Medium | SID: 1003001
+alert udp any any -> $HOME_NET any (msg:"UDP Port Scan Detected"; threshold:type both, track by_src, count 20, seconds 10; sid:1003001; rev:1;)
+
+
+# ============================================================================
+# SECTION 11: FTP SECURITY
+# ============================================================================
+
+# ============================================================================
+# SECTION 11: FTP SECURITY
+# ============================================================================
+
+# Rule 11.1: FTP Brute Force Detection
+# Detects FTP brute force attempts (5+ USER commands in 60 seconds)
+# Severity: High | SID: 1005001
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Brute Force Attempt"; flow:to_server,established; content:"USER"; nocase; threshold:type both, track by_src, count 5, seconds 60; sid:1005001; rev:1;)
+
+
+# ============================================================================
+# CONFIGURATION NOTES
+# ============================================================================
+
+# VARIABLE CONFIGURATION:
+# Ensure these variables are set in snort.conf:
+# - $HOME_NET: Your internal network (e.g., 192.168.1.0/24)
+# - $HTTP_PORTS: Web server ports (default: 80,8080,8000)
+# - $EXTERNAL_NET: !$HOME_NET
+
+# THRESHOLD TUNING:
+# Adjust threshold values based on your network baseline:
+# - count: Number of events before triggering
+# - seconds: Time window for counting events
+# - track by_src: Track events per source IP
+# - track by_dst: Track events per destination IP
+
+# PERFORMANCE OPTIMIZATION:
+# 1. Disable unused rules (comment out with #)
+# 2. Use preprocessors for protocol analysis
+# 3. Adjust thresholds to reduce false positives
+# 4. Monitor CPU and memory usage
+# 5. Use fast pattern matching where possible
+
+# TESTING COMMANDS:
+# Test configuration:
+#   sudo snort -T -c /etc/snort/snort.conf
+#
+# Run in console mode:
+#   sudo snort -A console -q -c /etc/snort/snort.conf -i eth0
+#
+# Test with PCAP:
+#   sudo snort -c /etc/snort/snort.conf -r traffic.pcap -A alert_fast
+#
+# View alerts:
+#   tail -f /var/log/snort/alert
+
+# ============================================================================
+# RULE STATISTICS
+# ============================================================================
+# Total Rules: 23
+# - Critical: 4 (Backdoors, SQL Injection, DDoS)
+# - High: 8 (Brute Force, XSS, Directory Traversal, etc)
+# - Medium: 10 (Scans, Reconnaissance, Service Detection)
+# - Low: 1 (ICMP Ping)
+#
+# Coverage:
+# - Network Layer: ICMP detection (3 rules)
+# - Transport Layer: Port scans (4 rules), Service monitoring (3 rules)
+# - Application Layer: Web attacks (4 rules), SSH/FTP (4 rules)
+# - Malware: Backdoor detection (2 rules)
+# - Botnet: C2 detection (2 rules)
+# - Reconnaissance: SNMP, DNS, Scans (3 rules)
+#
+# ============================================================================
+# END OF LOCAL RULES FILE
+# ============================================================================
+
