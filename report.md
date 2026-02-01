@@ -1,6 +1,6 @@
 # Month 2 Report - Snort NIDS Project
 
-**Student Name**: Rudra Patel, Hitendra Parmar, Athul Krishna, Shubham Pratap Singh  
+**Student Name**: Rudra Patel, Hitendra Parmar  
 **Date**: January 31, 2026  
 **Month**: 2 - Intermediate (Custom Rules & Attack Simulation)  
 **Project**: Network Intrusion Detection System Using Snort
