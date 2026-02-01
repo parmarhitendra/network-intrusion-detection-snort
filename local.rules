@@ -2,7 +2,7 @@
 # SNORT LOCAL RULES FILE
 # ============================================================================
 # Project: Network Intrusion Detection System (NIDS) Using Snort
-# Team: Rudra Patel, Hitendra Parmar, Athul Krishna, Shubham Pratap Singh
+# Team: Rudra Patel, Hitendra Parmar
 # Last Updated: January 31, 2026
 # Total Rules: 23
 # ============================================================================
@@ -91,7 +91,7 @@ alert tcp any any -> $HOME_NET 53 (msg:"DNS Zone Transfer Attempt"; flow:to_serv
 # Rule 6.1: Cross-Site Scripting (XSS) Detection
 # Detects XSS payload with prompt() function
 # Severity: High | SID: 1206
-alert tcp any any -> any 80 (msg:"XSS prompt attempt"; pcre:"/<script>prompt\\(/i"; sid:1206; rev:2;)
+alert tcp any any -> any 80 (msg:"XSS prompt attempt"; pcre:"/<script>prompt\\(/i"; sid:1206; rev:2)
 
 # Rule 6.2: SQL Injection Detection
 # Detects UNION-based SQL injection attempts
@@ -165,20 +165,8 @@ alert udp any any -> $HOME_NET any (msg:"UDP Port Scan Detected"; threshold:type
 
 
 # ============================================================================
-# SECTION 10: SSH SECURITY
+# SECTION 11: FTP SECURITY
 # ============================================================================
-
-# Rule 10.1: SSH Brute Force Detection
-# Detects SSH brute force attempts (5+ connections in 60 seconds)
-# Severity: High | SID: 1002004
-alert tcp any any -> $HOME_NET 22 (msg:"SSH Brute Force Attempt Detected"; flags:S; threshold:type both, track by_src, count 5, seconds 60; sid:1002004; rev:1;)
-
-# Rule 10.2: SSH Failed Login Pattern
-# Detects SSH authentication failures
-# Severity: High | SID: 1002005
-# NOTE: May not work with encrypted SSH 2.0 traffic
-alert tcp any any -> $HOME_NET 22 (msg:"Multiple SSH Failed Logins"; content:"Failed password"; threshold:type both, track by_src, count 3, seconds 60; sid:1002005; rev:1;)
-
 
 # ============================================================================
 # SECTION 11: FTP SECURITY
@@ -232,7 +220,7 @@ alert tcp any any -> $HOME_NET 21 (msg:"FTP Brute Force Attempt"; flow:to_server
 # ============================================================================
 # Total Rules: 23
 # - Critical: 4 (Backdoors, SQL Injection, DDoS)
-# - High: 8 (Brute Force, XSS, Directory Traversal, etc.)
+# - High: 8 (Brute Force, XSS, Directory Traversal, etc)
 # - Medium: 10 (Scans, Reconnaissance, Service Detection)
 # - Low: 1 (ICMP Ping)
 #
